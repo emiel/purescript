@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -euxo pipefail
+set -euo pipefail
 
 if [ $# -eq 0 ]; then
     echo "usage: $0 /path/to/exercises"
@@ -16,9 +16,7 @@ exercise_dir=$1
 
 bin_dir=$(dirname "$0")
 
-for exercise in ${exercise_dir}/practice/*; do
-    pushd $exercise
-    spago init -f
-    popd
-    ${bin_dir}/test-example.sh $exercise
+for exercise in "${exercise_dir}/practice/"*; do
+    echo "Working on: ${exercise}"
+    "${bin_dir}"/test-exercise.sh "${exercise}"
 done

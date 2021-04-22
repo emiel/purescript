@@ -1,6 +1,8 @@
 #!/bin/bash
 
-set -euxo pipefail
+# Run the exercise tests against the example solution.
+
+set -euo pipefail
 
 if [ $# -eq 0 ]; then
     echo "usage: $0 /path/to/exercise/slug"
@@ -26,13 +28,8 @@ cp -R -L \
     "${examples_dir}/src" \
     "${build_dir}"
 
-cleanup() {
-    rm -r "${build_dir}"
-}
-
-# trap cleanup EXIT INT TERM
-
 pushd "$build_dir"
-echo "Testing ${exercise_slug} in ${exercise_dir}..."
-spago test
+time spago install
+time spago build
+time spago test
 exit $?
