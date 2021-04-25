@@ -26,10 +26,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Use PureScript compiler and toolchain
-        uses: purescript-contrib/setup-purescript@main
-        with:
-          purescript: "0.13.8"
+      # - name: Use PureScript compiler and toolchain
+      #   uses: purescript-contrib/setup-purescript@main
 
       - name: Install project dependencies
         run: echo "<install dependencies>"
@@ -51,21 +49,28 @@ jobs:
         uses: purescript-contrib/setup-purescript@main
         with:
           purescript: ${{ matrix.version }}
+          spago: "0.19.2"
 
-      - name: Install project dependencies
-        run: echo "<install dependencies>"
+      # - name: Cache local .spago directories
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: build/*/.spago
+      #     key: ${{ runner.os }}-spago-${{ hashFiles('**/*.dhall') }}
 
-      - name: Cache local .spago directories
-        uses: actions/cache@v2
-        with:
-          path: build/*/.spago
-          key: ${{ runner.os }}-spago-${{ hashFiles('**/*.dhall') }}
-
-      - name: Cache build directories
-        uses: actions/cache@v2
-        with:
-          path: build/*/build
-          key: ${{ runner.os }}-spago-${{ hashFiles('**/*.dhall') }}
+      # - name: Cache build directories
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: build/*/build
+      #     key: ${{ runner.os }}-spago-${{ hashFiles('**/*.dhall') }}
+      #
+      # - name: Cache local .spago packages and build
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: |
+      #       build/_spago
+      #       build/_output
+      #     key: ${{ runner.os }}-spago-${{ hashFiles('exercises/**/*.dhall') }}
 
       - name: Run exercism/purescript ci (runs tests) for all exercises
-        run: ./bin/test-all-exercises.sh ./exercises
+        run: |
+          ./bin/build_test.sh ./exercises
