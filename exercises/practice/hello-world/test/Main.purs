@@ -3,16 +3,16 @@ module Test.Main where
 import Prelude
 
 import Effect (Effect)
-import Test.Unit (TestSuite, suite, test)
-import Test.Unit.Main (runTest)
-import Test.Unit.Assert as Assert
+import Effect.Aff (launchAff_)
+import Test.Spec (describe, it)
+import Test.Spec.Assertions (shouldEqual)
+import Test.Spec.Reporter.Console (consoleReporter)
+import Test.Spec.Runner (runSpec)
+
 import HelloWorld (helloWorld)
 
 main :: Effect Unit
-main = runTest suites
-
-suites :: TestSuite
-suites = do
-  suite "HelloWorld.helloWorld" do
-    test "Hello, World!" do
-      Assert.equal "Hello, World!" helloWorld
+main = launchAff_ $ runSpec [consoleReporter] do
+  describe "HelloWorld.helloWorld" do
+    it "Hello, World!" do
+       helloWorld `shouldEqual` "Hello, World!"
